@@ -56,4 +56,5 @@ jobs:
       - name: Run Gradle Tests
         working-directory: Leistungsnachweis
         run: |
+          chmod +x gradlew  # Ensure gradlew is executable
           ./gradlew test
