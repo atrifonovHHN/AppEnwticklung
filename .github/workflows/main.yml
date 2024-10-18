@@ -26,7 +26,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          curl --fail http://localhost:8080/api/health || exit 1  # Check if the API is working
+          curl --fail http://localhost:8080/health || exit 1  # Check if the API is working
 
       - name: Stop and Remove Assessment Container
         run: |
