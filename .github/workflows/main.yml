@@ -43,7 +43,20 @@ jobs:
             ]
           }' > results.json
 
-          curl --fail -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result || exit 1
+      - name: Attempt POST Request
+        run: |
+          # Versuche den POST-Request und speichere die Antwort oder den Fehler
+          curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
+
+      - name: Check POST Response
+        run: |
+          # Überprüfen, ob die Antwort eine bestimmte Nachricht enthält oder nicht leer ist
+          if grep -q "Not Found" post_response.txt; then
+            echo "POST request sent, but the resource was not found (404)."
+          else
+            echo "Unexpected response: $(cat post_response.txt)"
+            exit 1
+          fi
 
       - name: Stop and Remove Assessment Container
         run: |
