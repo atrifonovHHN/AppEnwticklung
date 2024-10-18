@@ -1,1 +1,34 @@
+name: Test Assessment Image
 
+on:
+  push:
+    branches:
+      - main  
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Pull Assessment Docker Image
+        run: docker pull mrksdh/assessment
+
+      - name: Run Assessment Docker Container
+        run: |
+          docker run -d --name assessment-test -p 8080:8080 mrksdh/assessment
+          sleep 10  # Wait to ensure the service is up
+
+      - name: Run Tests
+        run: |
+          curl --fail http://localhost:8080/api/health || exit 1
+
+      - name: Stop and Remove Assessment Container
+        run: |
+          docker stop assessment-test
+          docker rm assessment-test
