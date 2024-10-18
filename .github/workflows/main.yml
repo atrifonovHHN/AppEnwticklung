@@ -38,7 +38,7 @@ jobs:
             "result": [
               {
                 "customerId": "5bd2d637-c946-45bf-b194-d197da7da5cb",
-                "consumption": 529101000
+                "consumption": 2873559000
               }
             ]
           }' > results.json
