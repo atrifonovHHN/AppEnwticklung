@@ -3,7 +3,7 @@ name: Test Assessment Image
 on:
   push:
     branches:
-      - main  # Change this if you want to use a different branch
+      - main
   pull_request:
     branches:
       - main
@@ -22,11 +22,28 @@ jobs:
       - name: Run Assessment Docker Container
         run: |
           docker run -d --name assessment-test -p 8080:8080 mrksdh/assessment
-          sleep 10  # Wait to ensure the service is up
+          sleep 10
 
-      - name: Run Tests
+      - name: Run Health Check
         run: |
-          curl --fail http://localhost:8080/health || exit 1  # Check if the API is working
+          curl --fail http://localhost:8080/health || exit 1
+
+      - name: Get Dataset
+        run: |
+          curl --fail http://localhost:8080/v1/dataset -o dataset.json || exit 1
+
+      - name: Calculate Results
+        run: |
+          echo '{
+            "result": [
+              {
+                "customerId": "5bd2d637-c946-45bf-b194-d197da7da5cb",
+                "consumption": 529101000
+              }
+            ]
+          }' > results.json
+
+          curl --fail -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result || exit 1
 
       - name: Stop and Remove Assessment Container
         run: |
