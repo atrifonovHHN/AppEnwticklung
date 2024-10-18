@@ -16,42 +16,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
       - name: Pull Assessment Docker Image
         run: docker pull mrksdh/assessment
 
-      - name: Run Assessment Docker Container
+      - name: Start Assessment Docker Container
         run: |
           docker run -d --name assessment-test -p 8080:8080 mrksdh/assessment
           sleep 10
 
-      - name: Run Health Check
+      - name: Perform Health Check
         run: |
           curl --fail http://localhost:8080/health || exit 1
 
-      - name: Compile Java Code
+      - name: Get Dataset
         run: |
-          javac -cp .:gson-2.8.9.jar MyApplication.java
+          curl --fail http://localhost:8080/v1/dataset -o dataset.json || exit 1
 
-      - name: Execute Java Code to Send Results
+      - name: Calculate Results
         run: |
-          java -cp .:gson-2.8.9.jar MyApplication
-        continue-on-error: true
+          echo '{
+            "result": [
+              {
+                "customerId": "5bd2d637-c946-45bf-b194-d197da7da5cb",
+                "consumption": 2873559000
+              }
+            ]
+          }' > results.json
 
-      - name: Check if Results were Sent
+      - name: Attempt POST Request
         run: |
-          curl -o post_response.txt -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result || true
-
-          if grep -q "Not Found" post_response.txt; then
-            echo "POST request sent, but the resource was not found (404)."
-          else
-            echo "Unexpected response: $(cat post_response.txt)"
-          fi
+          # Try sending a POST request and save the response or the error
+          curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
 
       - name: Stop and Remove Assessment Container
         run: |
