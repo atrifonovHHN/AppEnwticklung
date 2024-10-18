@@ -54,6 +54,6 @@ jobs:
           docker rm assessment-test
 
       - name: Run Gradle Tests
-        working-directory: Git/AppEntwicklung/Leistungsnachweis
+        working-directory: Leistungsnachweis
         run: |
           ./gradlew test
