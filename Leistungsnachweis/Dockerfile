@@ -1,24 +1,14 @@
-# Use an official OpenJDK 22 image as the base
-FROM openjdk:22-jdk-slim as builder
+# Stage 1: Build
+FROM openjdk:22-jdk-slim AS builder
 
 # Set the working directory
 WORKDIR /Leistungsnachweis
 
-COPY ./Leistungsnachweis/gradlew .
-COPY ./Leistungsnachweis/gradle ./gradle
-COPY ./Leistungsnachweis/build.gradle .
-COPY ./Leistungsnachweis/settings.gradle .
-COPY ./Leistungsnachweis/src ./src
+# Copy all files from the current directory to the container's working directory
+COPY . .
 
-
+# Make the gradlew file executable
 RUN chmod +x gradlew
 
-
-# Final image
-FROM openjdk:22-jdk-slim
-
-# Copy the JAR file from the builder image
-COPY --from=builder /Leistungsnachweis/build/libs/*.jar app.jar
-
-# Start the application
-CMD ["java", "-jar", "app.jar"]
+# Build the application
+RUN ./gradlew build
