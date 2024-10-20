@@ -4,14 +4,6 @@ FROM openjdk:22-jdk-slim as builder
 # Set the working directory
 WORKDIR /Leistungsnachweis
 
-# Copy the Gradle build files and source code into the image
-COPY ./Leistungsnachweis/build.gradle ./build.gradle
-COPY ./Leistungsnachweis/settings.gradle ./settings.gradle
-COPY ./Leistungsnachweis/gradlew ./gradlew
-COPY ./Leistungsnachweis/gradlew.bat ./gradlew.bat
-COPY ./Leistungsnachweis/gradle ./gradle
-COPY ./Leistungsnachweis/src ./src
-
 # Build the application
 RUN ./gradlew build --no-daemon
 
