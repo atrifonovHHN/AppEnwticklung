@@ -5,7 +5,10 @@ FROM openjdk:22-jdk-slim as builder
 WORKDIR /Leistungsnachweis
 
 # Build the application
-RUN ./gradlew build --no-daemon
+COPY ./Leistungsnachweis/gradlew ./Leistungsnachweis/gradlew
+
+RUN chmod +x ./Leistungsnachweis/gradlew
+
 
 # Final image
 FROM openjdk:22-jdk-slim
