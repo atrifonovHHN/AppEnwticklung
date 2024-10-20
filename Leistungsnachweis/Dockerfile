@@ -5,9 +5,9 @@ FROM openjdk:22-jdk-slim as builder
 WORKDIR /Leistungsnachweis
 
 # Copy the Gradle build files and source code into the image
-COPY build.gradle settings.gradle gradlew gradlew.bat ./
-COPY gradle ./gradle
-COPY src ./src
+COPY ./Leistungsnachweis/build.gradle ./Leistungsnachweis/settings.gradle ./Leistungsnachweis/gradlew ./Leistungsnachweis/gradlew.bat ./
+COPY ./Leistungsnachweis/gradle ./gradle
+COPY ./Leistungsnachweis/src ./src
 
 # Build the application
 RUN ./gradlew build --no-daemon
@@ -19,7 +19,7 @@ FROM openjdk:22-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file from the builder image
-COPY --from=builder /app/build/libs/*.jar app.jar
+COPY --from=builder /Leistungsnachweis/build/libs/*.jar app.jar
 
 # Start the application
 CMD ["java", "-jar", "app.jar"]
