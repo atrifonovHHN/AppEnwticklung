@@ -5,9 +5,8 @@ FROM openjdk:22-jdk-slim as builder
 WORKDIR /Leistungsnachweis
 
 # Build the application
-COPY ./Leistungsnachweis/gradlew ./Leistungsnachweis/gradlew
 
-RUN chmod +x ./Leistungsnachweis/gradlew
+RUN chmod +x gradlew
 
 
 # Final image
