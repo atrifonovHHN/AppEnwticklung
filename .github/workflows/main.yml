@@ -53,8 +53,25 @@ jobs:
           docker stop assessment-test
           docker rm assessment-test
 
+      - name: Build and Run My Application Container
+        run: |
+          # Build the Docker image for your application
+          docker build -t my-application-image .
+          # Start the container for your application
+          docker run -d --name my-application-container -p 8081:8080 my-application-image
+          sleep 10
+
+      - name: Run Health Check for My Application
+        run: |
+          curl --fail http://localhost:8081/health || exit 1
+
       - name: Run Gradle Tests
         working-directory: Leistungsnachweis
         run: |
           chmod +x gradlew  # Ensure gradlew is executable
           ./gradlew test
+
+      - name: Stop and Remove My Application Container
+        run: |
+          docker stop my-application-container
+          docker rm my-application-container
