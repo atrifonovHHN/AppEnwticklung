@@ -18,9 +18,6 @@ RUN ./gradlew build --no-daemon
 # Final image
 FROM openjdk:22-jdk-slim
 
-# Set the working directory
-WORKDIR /app
-
 # Copy the JAR file from the builder image
 COPY --from=builder /Leistungsnachweis/build/libs/*.jar app.jar
 
