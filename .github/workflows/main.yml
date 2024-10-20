@@ -21,7 +21,7 @@ jobs:
 
       - name: Build Docker Image for Application
         run: |
-          docker build -t leistungsnachweis .  # Set the image name here
+          docker build -t leistungsnachweis ./Leistungsnachweis
 
       - name: Start Assessment Docker Container
         run: |
