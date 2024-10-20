@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Update to the latest version
 
       - name: Pull Assessment Docker Image
         run: docker pull mrksdh/assessment
@@ -30,7 +30,7 @@ jobs:
 
       - name: Start Application Docker Container
         run: |
-          docker run -d --name leistungsnachweis -p 8081:8080 leistungsnachweis  # Start your application container
+          docker run -d --name leistungsnachweis -p 8081:8080 leistungsnachweis
           sleep 10
 
       - name: Perform Health Check
@@ -54,18 +54,17 @@ jobs:
 
       - name: Attempt POST Request
         run: |
-          # Try sending a POST request and save the response or the error
           curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
 
       - name: Stop and Remove Assessment Container
         run: |
           docker stop assessment-test
-          docker rm assessment-test
+          docker rm -v assessment-test
 
       - name: Stop and Remove Application Container
         run: |
           docker stop leistungsnachweis
-          docker rm leistungsnachweis
+          docker rm -v leistungsnachweis
 
       - name: Run Gradle Tests
         working-directory: Leistungsnachweis
