@@ -4,7 +4,12 @@ FROM openjdk:22-jdk-slim as builder
 # Set the working directory
 WORKDIR /Leistungsnachweis
 
-# Build the application
+COPY ./Leistungsnachweis/gradlew .
+COPY ./Leistungsnachweis/gradle ./gradle
+COPY ./Leistungsnachweis/build.gradle .
+COPY ./Leistungsnachweis/settings.gradle .
+COPY ./Leistungsnachweis/src ./src
+
 
 RUN chmod +x gradlew
 
