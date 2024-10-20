@@ -14,10 +14,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Update to the latest version
+        uses: actions/checkout@v3
 
       - name: Pull Assessment Docker Image
         run: docker pull mrksdh/assessment
+
+      - name: Ensure gradlew is executable
+        run: chmod +x ./Leistungsnachweis/gradlew
 
       - name: Build Docker Image for Application
         run: |
