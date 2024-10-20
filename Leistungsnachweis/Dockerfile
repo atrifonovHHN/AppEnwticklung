@@ -2,7 +2,7 @@
 FROM openjdk:22-jdk-slim as builder
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /Leistungsnachweis
 
 # Copy the Gradle build files and source code into the image
 COPY build.gradle settings.gradle gradlew gradlew.bat ./
