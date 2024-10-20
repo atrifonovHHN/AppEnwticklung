@@ -1,4 +1,4 @@
-name: Test Assessment Image
+name: Build, Test, and Create Docker Container
 
 on:
   push:
@@ -9,31 +9,37 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Pull Assessment Docker Image
-        run: docker pull mrksdh/assessment
-
-      - name: Start Assessment Docker Container
+      - name: Build Docker Image
         run: |
-          docker run -d --name assessment-test -p 8080:8080 mrksdh/assessment
+          # Build the Docker image with a specific tag (e.g., my-app:latest)
+          docker build -t my-app:latest .
+
+      - name: Run Docker Container
+        run: |
+          # Start the Docker container based on the built image
+          docker run -d --name my-app-container -p 8080:8080 my-app:latest
           sleep 10
 
       - name: Perform Health Check
         run: |
+          # Check if the application is running
           curl --fail http://localhost:8080/health || exit 1
 
       - name: Get Dataset
         run: |
+          # Retrieve the dataset for testing
           curl --fail http://localhost:8080/v1/dataset -o dataset.json || exit 1
 
       - name: Calculate Results
         run: |
+          # Prepare a mock results file for testing the API
           echo '{
             "result": [
               {
@@ -48,13 +54,14 @@ jobs:
           # Try sending a POST request and save the response or the error
           curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
 
-      - name: Stop and Remove Assessment Container
-        run: |
-          docker stop assessment-test
-          docker rm assessment-test
-
       - name: Run Gradle Tests
         working-directory: Leistungsnachweis
         run: |
           chmod +x gradlew  # Ensure gradlew is executable
           ./gradlew test
+
+      - name: Stop and Remove Docker Container
+        run: |
+          # Clean up the Docker container after the tests
+          docker stop my-app-container
+          docker rm my-app-container
