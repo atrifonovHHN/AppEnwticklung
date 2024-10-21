@@ -29,11 +29,11 @@ jobs:
 
       - name: Perform Health Check
         run: |
-          curl --fail http://localhost:8080/health || exit 1 # Health Check für den Assessment-Service
+          curl --fail http://localhost:8081/health || exit 1 # Health Check für den Assessment-Service
 
       - name: Get Dataset
         run: |
-          curl --fail http://localhost:8080/v1/dataset -o dataset.json || exit 1
+          curl --fail http://localhost:8081/v1/dataset -o dataset.json || exit 1
 
       - name: Calculate Results
         run: |
@@ -48,7 +48,7 @@ jobs:
 
       - name: Attempt POST Request
         run: |
-          curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
+          curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8081/v1/result -o post_response.txt || true
 
       - name: Stop and Remove Services with Docker Compose
         working-directory: ./Leistungsnachweis
