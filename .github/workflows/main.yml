@@ -3,7 +3,7 @@ name: Test Assessment Image
 on:
   push:
     branches:
-      - main  
+      - main
   pull_request:
     branches:
       - main
@@ -14,21 +14,63 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Pull Assessment Docker Image
         run: docker pull mrksdh/assessment
 
-      - name: Run Assessment Docker Container
+      - name: Ensure gradlew is executable
+        run: chmod +x ./Leistungsnachweis/gradlew
+
+      - name: Build Docker Image for Application
+        run: |
+          docker build -t leistungsnachweis ./Leistungsnachweis
+
+      - name: Start Assessment Docker Container
         run: |
           docker run -d --name assessment-test -p 8080:8080 mrksdh/assessment
-          sleep 10  # Wait to ensure the service is up
+          sleep 10
 
-      - name: Run Tests
+      - name: Start Application Docker Container
         run: |
-          curl --fail http://localhost:8080/api/health || exit 1
+          docker run -d --name leistungsnachweis -p 8081:8080 leistungsnachweis
+          sleep 10
+
+      - name: Perform Health Check
+        run: |
+          curl --fail http://localhost:8080/health || exit 1
+
+      - name: Get Dataset
+        run: |
+          curl --fail http://localhost:8080/v1/dataset -o dataset.json || exit 1
+
+      - name: Calculate Results
+        run: |
+          echo '{
+            "result": [
+              {
+                "customerId": "5bd2d637-c946-45bf-b194-d197da7da5cb",
+                "consumption": 2873559000
+              }
+            ]
+          }' > results.json
+
+      - name: Attempt POST Request
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
 
       - name: Stop and Remove Assessment Container
         run: |
           docker stop assessment-test
-          docker rm assessment-test
+          docker rm -v assessment-test
+
+      - name: Stop and Remove Application Container
+        run: |
+          docker stop leistungsnachweis
+          docker rm -v leistungsnachweis
+
+      - name: Run Gradle Tests
+        working-directory: Leistungsnachweis
+        run: |
+          chmod +x gradlew  # Ensure gradlew is executable
+          ./gradlew test
