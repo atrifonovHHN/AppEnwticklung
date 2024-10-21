@@ -14,7 +14,7 @@ services:
       - .:/Leistungsnachweis # Mount the current directory into the container
     environment:
       - JAVA_OPTS=-Xmx512m # Example environment variable
-    restart: unless-stopped # Restart the container unless it is explicitly stopped
+    restart: no # Restart the container unless it is explicitly stopped
 
   assessment:
     image: mrksdh/assessment
