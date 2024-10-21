@@ -50,6 +50,10 @@ jobs:
         run: |
           curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8081/v1/result -o post_response.txt || true
 
+      - name: Run Tests
+        run: |
+          ./gradlew test || exit 1 # Run your Gradle tests and exit on failure
+
       - name: Stop and Remove Services with Docker Compose
         working-directory: ./Leistungsnachweis
         run: |
