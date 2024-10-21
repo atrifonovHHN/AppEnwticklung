@@ -76,7 +76,7 @@ public class UseTimeCalculator {
                     .toArray()));
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/v1/result"))
+                    .uri(new URI("http://localhost:8081/v1/result"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();

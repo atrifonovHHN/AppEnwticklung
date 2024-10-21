@@ -12,8 +12,16 @@ import com.google.gson.Gson;
  * It makes HTTP GET requests and converts the JSON response into a Dataset object using the Gson library
  */
 public class Http_Controller {
-    private static final String GET_URL = "http://localhost:8080/v1/dataset";
+    private HttpClient client;
+    private static final String GET_URL = "http://localhost:8081/v1/dataset";
 
+    public Http_Controller() {
+        this.client = HttpClient.newHttpClient();
+    }
+
+    public Http_Controller(HttpClient client) {
+        this.client = client != null ? client : HttpClient.newHttpClient();
+    }
     /**
      * Fetches the dataset from the specified URL
      * This method sends an HTTP GET request to the server and retrieves the dataset
