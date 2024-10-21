@@ -32,6 +32,7 @@ jobs:
           docker build -t leistungsnachweis ./Leistungsnachweis
 
       - name: Start Services with Docker Compose
+        working-directory: ./Leistungsnachweis 
         run: |
           docker-compose up -d
           sleep 10 # Wait for containers to start
@@ -60,6 +61,7 @@ jobs:
           curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
 
       - name: Stop and Remove Services with Docker Compose
+        working-directory: ./Leistungsnachweis
         run: |
           docker-compose down
 
