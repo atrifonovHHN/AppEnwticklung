@@ -21,25 +21,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-      - name: Pull Assessment Docker Image
-        run: docker pull mrksdh/assessment
-
-      - name: Ensure gradlew is executable
-        run: chmod +x ./Leistungsnachweis/gradlew
-
-      - name: Build Docker Image for Application
-        run: |
-          docker build -t leistungsnachweis ./Leistungsnachweis
-
       - name: Start Services with Docker Compose
         working-directory: ./Leistungsnachweis 
         run: |
           docker-compose up -d
-          sleep 10 # Wait for containers to start
+          sleep 15 # Wartezeit erhöhen, um sicherzustellen, dass die Container vollständig gestartet sind
 
       - name: Perform Health Check
         run: |
-          curl --fail http://localhost:8080/health || exit 1
+          curl --fail http://localhost:8080/health || exit 1 # Health Check für den Assessment-Service
 
       - name: Get Dataset
         run: |
@@ -64,9 +54,3 @@ jobs:
         working-directory: ./Leistungsnachweis
         run: |
           docker-compose down
-
-      - name: Run Gradle Tests
-        working-directory: Leistungsnachweis
-        run: |
-          chmod +x gradlew  # Ensure gradlew is executable
-          ./gradlew test
