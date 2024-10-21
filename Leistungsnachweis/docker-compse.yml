@@ -1,9 +1,24 @@
 version: '3.8'
 
 services:
-  app:
+  leistungsnachweis:
     build:
       context: .
       dockerfile: Dockerfile
+      target: builder # Use the "builder" stage from the Dockerfile
+    image: leistungsnachweis
+    container_name: leistungsnachweis
     ports:
-      - "8080:8080"
+      - "8080:8080" # Map port 8080 on the host to port 8080 in the container
+    volumes:
+      - .:/Leistungsnachweis # Mount the current directory into the container
+    environment:
+      - JAVA_OPTS=-Xmx512m # Example environment variable
+    restart: unless-stopped # Restart the container unless it is explicitly stopped
+
+  assessment:
+    image: mrksdh/assessment
+    container_name: assessment
+    ports:
+      - "8081:8080" # Map port 8081 on the host to port 8080 in the container
+    restart: unless-stopped # Restart the container unless it is explicitly stopped
