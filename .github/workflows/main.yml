@@ -26,15 +26,10 @@ jobs:
         run: |
           docker build -t leistungsnachweis ./Leistungsnachweis
 
-      - name: Start Assessment Docker Container
+      - name: Start Services with Docker Compose
         run: |
-          docker run -d --name assessment-test -p 8080:8080 mrksdh/assessment
-          sleep 10
-
-      - name: Start Application Docker Container
-        run: |
-          docker run -d --name leistungsnachweis -p 8081:8080 leistungsnachweis
-          sleep 10
+          docker-compose up -d
+          sleep 10 # Wait for containers to start
 
       - name: Perform Health Check
         run: |
@@ -59,15 +54,9 @@ jobs:
         run: |
           curl -X POST -H "Content-Type: application/json" -d @results.json http://localhost:8080/v1/result -o post_response.txt || true
 
-      - name: Stop and Remove Assessment Container
+      - name: Stop and Remove Services with Docker Compose
         run: |
-          docker stop assessment-test
-          docker rm -v assessment-test
-
-      - name: Stop and Remove Application Container
-        run: |
-          docker stop leistungsnachweis
-          docker rm -v leistungsnachweis
+          docker-compose down
 
       - name: Run Gradle Tests
         working-directory: Leistungsnachweis
