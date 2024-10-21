@@ -25,11 +25,11 @@ jobs:
         working-directory: ./Leistungsnachweis 
         run: |
           docker-compose up -d
-          sleep 15 # Wartezeit erhöhen, um sicherzustellen, dass die Container vollständig gestartet sind
+          sleep 15 
 
       - name: Perform Health Check
         run: |
-          curl --fail http://localhost:8081/health || exit 1 # Health Check für den Assessment-Service
+          curl --fail http://localhost:8081/health || exit 1 # Health Check for Assessment-Service
 
       - name: Get Dataset
         run: |

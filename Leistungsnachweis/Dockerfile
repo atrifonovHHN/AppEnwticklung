@@ -12,3 +12,6 @@ RUN chmod +x gradlew
 
 # Build the application
 RUN ./gradlew build
+
+# Run the application
+CMD ["java", "-jar", "UseTimeCalculator.jar"]
