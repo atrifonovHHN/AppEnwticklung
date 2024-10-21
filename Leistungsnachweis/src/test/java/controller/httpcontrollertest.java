@@ -52,7 +52,7 @@ class Http_ControllerTest {
     @Test
     public void testFetchDataset_CalculateEvents() {
         // Simulate JSON response corresponding to the events
-        String mockJsonResponse = "{\"events\": [{\"customerId\": \"403627df-88d9-4783-afee-6252c59ce20b\", \"workloadId\": \"f8413e71-cd11-4b3f-8fc5-e7ad69498eb2\", \"timestamp\": 1700290456000, \"eventType\": \"start\"}]}";
+        String mockJsonResponse = "{\"events\": [{\"customerId\": \"403627df-88d9-4783-afee-6252c59ce20b\", \"workloadId\": \"f8413e71-cd11-4b3f-8fc5-e7ad69498eb2\", \"timestamp\": 1700290456000, \"eventType\": \"stop\"}]}";
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(mockJsonResponse));
@@ -67,12 +67,12 @@ class Http_ControllerTest {
         String expectedCustomerId = "403627df-88d9-4783-afee-6252c59ce20b";
         String expectedWorkloadId = "f8413e71-cd11-4b3f-8fc5-e7ad69498eb2";
         long expectedTimestamp = 1700290456000L;
-        String expectedEventType = "start"; // Adjusted from "stop" to "start" to match the mock data
+        String expectedEventType = "stop";
 
         // Verify the data in the dataset
         assertEquals(expectedCustomerId, dataset.getEvents().get(0).getCustomerId(), "The CustomerId should match");
         assertEquals(expectedWorkloadId, dataset.getEvents().get(0).getWorkloadId(), "The WorkloadId should match");
         assertEquals(expectedTimestamp, dataset.getEvents().get(0).getTimestamp(), "The timestamp should match");
-        assertEquals(expectedEventType, dataset.getEvents().get(0).getEventType(), "The event type should match");
+       assertEquals(expectedEventType, dataset.getEvents().get(0).getEventType(), "The event type should match");
     }
 }
