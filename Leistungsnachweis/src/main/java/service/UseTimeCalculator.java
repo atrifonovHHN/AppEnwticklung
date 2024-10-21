@@ -76,7 +76,7 @@ public class UseTimeCalculator {
                     .toArray()));
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8081/v1/result"))
+                    .uri(new URI("http://localhost:8080/v1/result"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
@@ -98,6 +98,14 @@ public class UseTimeCalculator {
      * It fetches the dataset, calculates the total runtimes for each customer, and sends the results
      */
     public static void main(String[] args) {
+        System.out.println("Main method is running...");
+
+        try {
+            Thread.sleep(5000); // 5 Sekunden warten
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Http_Controller controller = new Http_Controller();
         Dataset dataset = controller.fetchDataset();
 

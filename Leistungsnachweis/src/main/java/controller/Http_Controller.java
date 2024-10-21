@@ -1,5 +1,6 @@
 package controller;
 
+import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,7 +14,7 @@ import com.google.gson.Gson;
  */
 public class Http_Controller {
     private HttpClient client;
-    private static final String GET_URL = "http://localhost:8081/v1/dataset";
+    private static final String GET_URL = "http://localhost:8080/v1/dataset";
 
     public Http_Controller() {
         this.client = HttpClient.newHttpClient();
@@ -35,7 +36,7 @@ public class Http_Controller {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URL(GET_URL).toURI())
+                    .uri(URI.create(GET_URL))
                     .GET()
                     .build();
 

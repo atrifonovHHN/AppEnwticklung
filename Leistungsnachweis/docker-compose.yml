@@ -1,24 +1,20 @@
 version: '3.8'
-
 services:
-  leistungsnachweis:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: leistungsnachweis
-    container_name: leistungsnachweis
+  assessment-service:
+    image: mrksdh/assessment
+    container_name: assessment-service
     ports:
       - "8080:8080"
-    volumes:
-      - .:/Leistungsnachweis
-    environment:
-      - JAVA_OPTS=-Xmx512m
+    networks:
+      - myNetwork
 
-  assessment:
-    image: mrksdh/assessment
-    container_name: assessment
-    ports:
-      - "8081:8080"
-    restart: unless-stopped
+  java-app:
+    build: .
+    container_name: Calculator
+    depends_on:
+      - assessment-service
+    network_mode: service:assessment-service
 
-
+networks:
+  myNetwork:
+    internal: true
